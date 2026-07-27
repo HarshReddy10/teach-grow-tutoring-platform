@@ -18,23 +18,23 @@ import API_URL from "@/config/api";
 const normalize = (value?: string | null) => (value || "").trim().toLowerCase();
 
 const STANDARD_SUBJECTS = [
-  "Mathematics", 
-  "Physics", 
-  "Chemistry", 
-  "Biology", 
-  "Coding / Computer Science", 
-  "English", 
-  "History", 
-  "Geography", 
-  "Economics & Finance", 
-  "Foreign Languages", 
-  "Music (Vocal/Instruments)", 
-  "Dance", 
-  "Fine Arts & Drawing", 
-  "Chess", 
-  "Yoga & Meditation", 
-  "Public Speaking & Debate", 
-  "Creative Writing", 
+  "Mathematics",
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "Coding / Computer Science",
+  "English",
+  "History",
+  "Geography",
+  "Economics & Finance",
+  "Foreign Languages",
+  "Music (Vocal/Instruments)",
+  "Dance",
+  "Fine Arts & Drawing",
+  "Chess",
+  "Yoga & Meditation",
+  "Public Speaking & Debate",
+  "Creative Writing",
   "Photography & Video",
   "Malayalam"
 ];
@@ -53,12 +53,12 @@ const standardizeSubject = (sub: string): string => {
 const getCleanSubjectName = (subject: string): string => {
   const stripped = subject.replace(/\s*\((Academic|Extracurricular)\)/i, "").trim();
   const stdStripped = standardizeSubject(stripped);
-  
+
   const matchedStandard = STANDARD_SUBJECTS.find(std => standardizeSubject(std) === stdStripped);
   if (matchedStandard) {
     return matchedStandard;
   }
-  
+
   return stripped.split(' ').map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : '').join(' ');
 };
 
@@ -107,6 +107,7 @@ const BrowseTutors = () => {
   const [time, setTime] = useState(() => sessionStorage.getItem("tutor_time") || "all");
   const [showFilters, setShowFilters] = useState(() => sessionStorage.getItem("tutor_show_filters") === "true");
   const [showMap, setShowMap] = useState(() => sessionStorage.getItem("tutor_show_map") === "true");
+  const [sortBy, setSortBy] = useState<string>(() => sessionStorage.getItem("tutor_sort_by") || "default");
 
   useEffect(() => {
     if (categoryParam?.toLowerCase() === "academic") {
@@ -126,9 +127,10 @@ const BrowseTutors = () => {
     sessionStorage.setItem("tutor_city", city);
     sessionStorage.setItem("tutor_day", day);
     sessionStorage.setItem("tutor_time", time);
+    sessionStorage.setItem("tutor_sort_by", sortBy);
     sessionStorage.setItem("tutor_show_filters", String(showFilters));
     sessionStorage.setItem("tutor_show_map", String(showMap));
-  }, [search, category, subject, mode, city, day, time, showFilters, showMap]);
+  }, [search, category, subject, mode, city, day, time, sortBy, showFilters, showMap]);
 
   const handleCategoryChange = (val: string) => {
     setCategory(val);
@@ -189,7 +191,7 @@ const BrowseTutors = () => {
   }, [allSubjects, subject]);
 
   const filtered = useMemo(() => {
-    return tutors
+    const result = tutors
       .filter((t) => {
         if (search) {
           const q = normalize(search);
@@ -230,7 +232,27 @@ const BrowseTutors = () => {
           return dayMatch && timeMatch;
         });
       });
-  }, [search, selectedCategory, selectedSubject, selectedMode, selectedCity, day, time, tutors]);
+
+    // Helper to get actual price (from subjectRates minimum or fallback to hourlyRate)
+    const getTutorPrice = (tutor: Tutor) => {
+      const rates = (tutor as any).subjectRates?.map((sr: any) => sr.rate) || [];
+      if (rates.length > 0) {
+        return Math.min(...rates);
+      }
+      return tutor.hourlyRate || 0;
+    };
+
+    // Apply sorting (Alphabetical A-Z by default, or price-asc, price-desc)
+    return [...result].sort((a, b) => {
+      if (sortBy === "price-asc") {
+        return getTutorPrice(a) - getTutorPrice(b);
+      }
+      if (sortBy === "price-desc") {
+        return getTutorPrice(b) - getTutorPrice(a);
+      }
+      return (a.name || "").localeCompare(b.name || "");
+    });
+  }, [search, selectedCategory, selectedSubject, selectedMode, selectedCity, day, time, sortBy, tutors]);
 
   const clearFilters = () => {
     setSearch("");
@@ -240,10 +262,11 @@ const BrowseTutors = () => {
     setCity("all");
     setDay("all");
     setTime("all");
+    setSortBy("default");
     setSearchParams({});
   };
 
-  const hasFilters = search || category !== "all" || subject !== "all" || mode !== "all" || city !== "all" || time !== "all" || day !== "all";
+  const hasFilters = search || category !== "all" || subject !== "all" || mode !== "all" || city !== "all" || time !== "all" || day !== "all" || sortBy !== "default";
 
   return (
     <PageLayout>
@@ -375,12 +398,23 @@ const BrowseTutors = () => {
               </SelectContent>
             </Select>
 
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="default">Sort: Default</SelectItem>
+                <SelectItem value="price-asc">Price: Low to High</SelectItem>
+                <SelectItem value="price-desc">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
+
             {hasFilters && (
               <Button variant="ghost" onClick={clearFilters} className="text-sm">
                 Clear filters
               </Button>
             )}
-            
+
             <Button
               variant={showMap ? "default" : "outline"}
               onClick={() => setShowMap(!showMap)}
