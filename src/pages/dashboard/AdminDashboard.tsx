@@ -2074,8 +2074,18 @@ const AdminDashboard = () => {
                     {selectedTutorForDetail.availability && selectedTutorForDetail.availability.length > 0 ? (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
                         {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => {
-                          const daySlots = selectedTutorForDetail.availability.filter((a: any) => a.day === day);
-                          if (daySlots.length === 0) return null;
+                          const rawSlots = selectedTutorForDetail.availability.filter((a: any) => a.day === day);
+                          if (rawSlots.length === 0) return null;
+                          
+                          // Deduplicate slots to prevent displaying the exact same timings
+                          const seen = new Set<string>();
+                          const daySlots = rawSlots.filter((slot: any) => {
+                            const key = `${slot.startTime}-${slot.endTime}`;
+                            if (seen.has(key)) return false;
+                            seen.add(key);
+                            return true;
+                          });
+
                           return (
                             <div key={day} className="flex flex-col p-2 border rounded-lg bg-background/50">
                               <span className="font-bold text-foreground text-xs">{day}</span>

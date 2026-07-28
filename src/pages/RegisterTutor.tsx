@@ -333,9 +333,16 @@ const RegisterTutor = () => {
       teaching_mode: teachingMode.toLowerCase(),
       address: (teachingMode === "Offline" || teachingMode === "Both") ? address : "",
       google_maps_url: (teachingMode === "Offline" || teachingMode === "Both") ? googleMapsUrl : "",
-      availability: JSON.stringify(selectedDays.flatMap(dayObj => 
-        dayObj.slots.map(slot => ({ day: dayObj.day, startTime: slot.startTime, endTime: slot.endTime }))
-      )),
+      availability: JSON.stringify(selectedDays.flatMap(dayObj => {
+        const seen = new Set<string>();
+        const uniqueSlots = dayObj.slots.filter(slot => {
+          const key = `${slot.startTime}-${slot.endTime}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        return uniqueSlots.map(slot => ({ day: dayObj.day, startTime: slot.startTime, endTime: slot.endTime }));
+      })),
       ...(photoUrl && { photo: photoUrl }),
       ...(docUrl && { verificationDocument: docUrl })
     });

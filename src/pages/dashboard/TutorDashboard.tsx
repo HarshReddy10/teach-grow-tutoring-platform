@@ -303,10 +303,21 @@ const TutorDashboard = () => {
       setAvailability(prev => prev.map(p => {
         const foundSlots = tutorStats.availability?.filter(a => a.day === p.day);
         if (foundSlots && foundSlots.length > 0) {
+          // Deduplicate slots to prevent displaying duplicates in edit inputs
+          const seen = new Set<string>();
+          const uniqueSlots = foundSlots
+            .map(s => ({ startTime: s.startTime, endTime: s.endTime }))
+            .filter(slot => {
+              const key = `${slot.startTime}-${slot.endTime}`;
+              if (seen.has(key)) return false;
+              seen.add(key);
+              return true;
+            });
+
           return { 
             ...p, 
             selected: true, 
-            slots: foundSlots.map(s => ({ startTime: s.startTime, endTime: s.endTime })) 
+            slots: uniqueSlots 
           };
         }
         return { ...p, selected: false, slots: [{ startTime: '09:00', endTime: '17:00' }] };
@@ -336,9 +347,17 @@ const TutorDashboard = () => {
       }
     }
 
-    const payload = selectedDays.flatMap(dayObj => 
-      dayObj.slots.map(slot => ({ day: dayObj.day, startTime: slot.startTime, endTime: slot.endTime }))
-    );
+    const payload = selectedDays.flatMap(dayObj => {
+      // Deduplicate slots for saving safely
+      const seen = new Set<string>();
+      const uniqueSlots = dayObj.slots.filter(slot => {
+        const key = `${slot.startTime}-${slot.endTime}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      return uniqueSlots.map(slot => ({ day: dayObj.day, startTime: slot.startTime, endTime: slot.endTime }));
+    });
     
     setIsSavingAvailability(true);
     dispatch(updateTutorAvailability({ tutorId: tutorProfile.id, availability: payload }))

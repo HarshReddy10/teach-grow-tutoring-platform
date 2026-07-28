@@ -1165,8 +1165,18 @@ const TutorProfile = () => {
                   {tutor.availability && tutor.availability.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => {
-                        const daySlots = tutor.availability.filter((a: any) => a.day === day);
-                        if (daySlots.length === 0) return null;
+                        const rawSlots = tutor.availability.filter((a: any) => a.day === day);
+                        if (rawSlots.length === 0) return null;
+                        
+                        // Deduplicate slots to prevent displaying the exact same timings
+                        const seen = new Set<string>();
+                        const daySlots = rawSlots.filter((slot: any) => {
+                          const key = `${slot.startTime}-${slot.endTime}`;
+                          if (seen.has(key)) return false;
+                          seen.add(key);
+                          return true;
+                        });
+
                         return (
                           <div key={day} className="flex flex-col p-3 border rounded-lg bg-secondary/10">
                             <span className="font-bold text-foreground mb-1">{day}</span>
