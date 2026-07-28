@@ -231,7 +231,7 @@ const TutorDashboard = () => {
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
   const [selectedBoards, setSelectedBoards] = useState<string[]>([]);
   const [newSubjectName, setNewSubjectName] = useState("");
-  const [newSubjectRate, setNewSubjectRate] = useState(500);
+  const [newSubjectRate, setNewSubjectRate] = useState(300);
   const [customSubjectInput, setCustomSubjectInput] = useState(false);
   const [newSubjectCategory, setNewSubjectCategory] = useState("Academic");
   const [isSavingProfile, setIsSavingProfile] = useState(false);
@@ -282,7 +282,7 @@ const TutorDashboard = () => {
           setSelectedBoards(res.data.boardsTaught || []);
           const legacyRates = res.data.subjectRates && res.data.subjectRates.length > 0
             ? res.data.subjectRates
-            : (res.data.subjects || []).map((sub: string) => ({ subject: sub, rate: res.data.hourlyRate || 500 }));
+            : (res.data.subjects || []).map((sub: string) => ({ subject: sub, rate: res.data.hourlyRate || 300 }));
           setSubjectRates(legacyRates);
           dispatch(fetchTutorStats(res.data.id)); // Database object ID natively fetched
           axios.get(`${API_URL}/dashboard/tutor/${res.data.id}/bookings`)

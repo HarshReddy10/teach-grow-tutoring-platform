@@ -130,7 +130,7 @@ async function runTest() {
         let subjectPeriods = periods.filter(p => p.subject === subject);
         if (subjectPeriods.length === 0) {
           const matchingRateObj = (t.subjectRates || []).find(sr => sr.subject === subject);
-          const rate = matchingRateObj ? matchingRateObj.rate : (t.hourlyRate || 500);
+          const rate = matchingRateObj ? matchingRateObj.rate : (t.hourlyRate || 300);
           subjectPeriods = [{
             subject,
             rate,

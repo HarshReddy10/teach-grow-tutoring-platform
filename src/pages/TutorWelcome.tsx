@@ -164,7 +164,7 @@ const TutorWelcome = () => {
                   value: loading ? "..." : (() => {
                     const rates = tutorProfile?.subjectRates?.map((sr: any) => sr.rate) || [];
                     if (rates.length === 0) {
-                      return tutorProfile?.hourlyRate ? `₹${tutorProfile.hourlyRate}/hr` : "₹500/hr";
+                      return tutorProfile?.hourlyRate ? `₹${tutorProfile.hourlyRate}/hr` : "₹300/hr";
                     }
                     const minRate = Math.min(...rates);
                     const maxRate = Math.max(...rates);

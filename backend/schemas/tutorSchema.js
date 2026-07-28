@@ -25,10 +25,10 @@ const tutorSchema = new mongoose.Schema({
   subjects: [{ type: String }],
   classesTaught: [{ type: String }],
   boardsTaught: [{ type: String }],
-  hourlyRate: { type: Number, required: true, default: 500 },
+  hourlyRate: { type: Number, required: true, default: 300 },
   subjectRates: [{
     subject: { type: String, required: true },
-    rate: { type: Number, required: true, default: 500 }
+    rate: { type: Number, required: true, default: 300 }
   }],
   status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
   isVerified: { type: Boolean, default: false },
@@ -63,7 +63,7 @@ tutorSchema.pre('save', function() {
       this.pricingHistory = [];
       const ratesToInitialize = this.subjectRates && this.subjectRates.length > 0
         ? this.subjectRates
-        : (this.subjects || []).map(sub => ({ subject: sub, rate: this.hourlyRate || 500 }));
+        : (this.subjects || []).map(sub => ({ subject: sub, rate: this.hourlyRate || 300 }));
         
       ratesToInitialize.forEach(sr => {
         this.pricingHistory.push({

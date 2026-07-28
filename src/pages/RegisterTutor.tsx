@@ -104,7 +104,7 @@ const RegisterTutor = () => {
   const [customSubjects, setCustomSubjects] = useState<{ subject: string; category: string; rate: number }[]>([]);
   const [newCustomName, setNewCustomName] = useState("");
   const [newCustomCategory, setNewCustomCategory] = useState("Academic");
-  const [newCustomRate, setNewCustomRate] = useState(500);
+  const [newCustomRate, setNewCustomRate] = useState(300);
   const [bio, setBio] = useState("");
   const [hearAboutUs, setHearAboutUs] = useState("");
   const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -187,7 +187,7 @@ const RegisterTutor = () => {
     setSelectedSubjects((prev) => {
       const isChecked = prev.includes(s);
       if (!isChecked) {
-        setSubjectRates(prevRates => ({ ...prevRates, [s]: 500 }));
+        setSubjectRates(prevRates => ({ ...prevRates, [s]: 300 }));
         return [...prev, s];
       } else {
         return prev.filter((x) => x !== s);
@@ -224,7 +224,7 @@ const RegisterTutor = () => {
     selectedSubjects.filter(s => s !== "Other").forEach(sub => {
       finalSubjectRates.push({
         subject: sub,
-        rate: Number(subjectRates[sub]) || 500
+        rate: Number(subjectRates[sub]) || 300
       });
     });
 
@@ -323,7 +323,7 @@ const RegisterTutor = () => {
       classesTaught: JSON.stringify(selectedClasses),
       boardsTaught: JSON.stringify(selectedBoards),
       subjectRates: JSON.stringify(finalSubjectRates),
-      hourlyRate: finalSubjectRates[0]?.rate || 500,
+      hourlyRate: finalSubjectRates[0]?.rate || 300,
       bio,
       hearAboutUs,
       experience,
@@ -572,7 +572,7 @@ const RegisterTutor = () => {
                                 min={1}
                                 max={10000}
                                 className="w-24 h-8 text-xs font-bold"
-                                value={subjectRates[s] !== undefined ? subjectRates[s] : 500}
+                                value={subjectRates[s] !== undefined ? subjectRates[s] : 300}
                                 onChange={(e) => {
                                   const cleaned = e.target.value.replace(/[^0-9]/g, '');
                                   const val = cleaned === "" ? "" : parseInt(cleaned, 10);

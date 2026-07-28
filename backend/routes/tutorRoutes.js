@@ -158,7 +158,7 @@ const calculatePlanPrice = (tutor, subject, planType) => {
   }
   
   // Find subject rate
-  let subjectRate = tutor.hourlyRate || 500;
+  let subjectRate = tutor.hourlyRate || 300;
   if (tutor.subjectRates && Array.isArray(tutor.subjectRates)) {
     const rateObj = tutor.subjectRates.find(sr => sr.subject === subject);
     if (rateObj) {

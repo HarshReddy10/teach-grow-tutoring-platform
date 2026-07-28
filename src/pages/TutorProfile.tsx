@@ -111,9 +111,9 @@ const TutorProfile = () => {
   const bookingInProgressRef = useRef(false);
 
   const getSubjectRate = () => {
-    if (!selectedSubject) return tutor?.hourlyRate || 500;
+    if (!selectedSubject) return tutor?.hourlyRate || 300;
     const rateObj = tutor?.subjectRates?.find((sr: any) => sr.subject === selectedSubject);
-    return rateObj ? rateObj.rate : (tutor?.hourlyRate || 500);
+    return rateObj ? rateObj.rate : (tutor?.hourlyRate || 300);
   };
   const subjectRate = getSubjectRate();
 
