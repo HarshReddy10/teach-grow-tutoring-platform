@@ -99,6 +99,7 @@ const Index = () => {
               "text": "Visit our 'Become a Tutor' page and fill out the detailed tutor registration form. Our team will review your credentials, background check, and experience, and respond within 2-3 business days."
             }
           },
+          /*
           {
             "@type": "Question",
             "name": "Are all tutors verified?",
@@ -107,6 +108,7 @@ const Index = () => {
               "text": "Yes, every tutor on Cuvasol Tutor undergoes a comprehensive vetting and verification process including identity validation, educational credential verification, and background checks."
             }
           },
+          */
           {
             "@type": "Question",
             "name": "What are your operating hours?",
@@ -341,6 +343,7 @@ const Index = () => {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* 
               <AccordionItem value="item-4" className="border rounded-xl px-6 bg-card shadow-sm hover:shadow-md transition-shadow">
                 <AccordionTrigger className="text-lg font-semibold text-foreground hover:no-underline py-5">
                   Are all tutors verified?
@@ -349,6 +352,7 @@ const Index = () => {
                   Yes, every tutor on our platform undergoes a comprehensive verification process including background checks, credential validation, and quality assessment.
                 </AccordionContent>
               </AccordionItem>
+              */}
 
               <AccordionItem value="item-5" className="border rounded-xl px-6 bg-card shadow-sm hover:shadow-md transition-shadow">
                 <AccordionTrigger className="text-lg font-semibold text-foreground hover:no-underline py-5">
