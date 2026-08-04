@@ -1620,10 +1620,55 @@ const TutorProfile = () => {
                               initialFocus
                               disabled={(d) => {
                                 if (d < new Date(new Date().setHours(0, 0, 0, 0))) return true;
-                                if (tutor?.availability && tutor.availability.length > 0) {
+                                
+                                // Determine availability source
+                                let tutorAvail = tutor?.availability;
+                                if ((!tutorAvail || tutorAvail.length === 0) && tutor?.availableTimings && tutor.availableTimings.length > 0) {
+                                  tutorAvail = tutor.availableTimings.map((timeStr: string) => {
+                                    const tutorWeekday = new Intl.DateTimeFormat('en-US', {
+                                      weekday: 'long',
+                                      timeZone: 'Asia/Kolkata'
+                                    }).format(d);
+                                    
+                                    let parsed = parse(timeStr, 'h:mm a', new Date());
+                                    if (isNaN(parsed.getTime())) {
+                                      parsed = parse(timeStr, 'HH:mm', new Date());
+                                    }
+                                    const time24 = format(parsed, 'HH:mm');
+                                    const endParsed = addMinutes(parsed, 30);
+                                    const endTime24 = format(endParsed, 'HH:mm');
+                                    
+                                    return {
+                                      day: tutorWeekday,
+                                      startTime: time24,
+                                      endTime: endTime24
+                                    };
+                                  });
+                                }
+
+                                if (tutorAvail && tutorAvail.length > 0) {
                                   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                                   const dayName = days[getDay(d)];
-                                  return !tutor.availability.some((a: any) => a.day === dayName);
+                                  const matchesWeekday = tutorAvail.some((a: any) => a.day === dayName);
+                                  if (!matchesWeekday) return true;
+
+                                  // If today, disable if all slots are in the past or within 3 hours
+                                  const todayStr = formatDateInTimeZone(new Date(), studentTimezone);
+                                  const dStr = formatDateInTimeZone(d, studentTimezone);
+                                  if (todayStr === dStr) {
+                                    const slots = convertTutorSlotsToStudentTime(
+                                      tutorAvail,
+                                      tutor?.timezone || 'Asia/Kolkata',
+                                      d,
+                                      studentTimezone
+                                    );
+                                    const filtered = slots.filter(slot => {
+                                      const minTime = new Date(Date.now() + 3 * 60 * 60 * 1000);
+                                      return slot.utcTimeMs >= minTime.getTime();
+                                    });
+                                    return filtered.length === 0;
+                                  }
+                                  return false;
                                 }
                                 return false;
                               }}

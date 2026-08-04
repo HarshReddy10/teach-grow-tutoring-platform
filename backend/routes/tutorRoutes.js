@@ -347,7 +347,7 @@ router.post('/:id/book', async (req, res) => {
       const tutorUser = await User.findById(tutor.userId);
       if (tutorUser && tutorUser.email) {
         console.log(`[Booking] Attempting to notify tutor: ${tutorUser.email}`);
-        await transporter.sendMail({
+        transporter.sendMail({
           from: process.env.EMAIL_FROM || '"Cuvasol Tutor" <noreply@cuvasoltutor.com>',
           to: tutorUser.email,
           subject: 'New Demo Session Requested (Pending Approval)',
@@ -357,8 +357,11 @@ router.post('/:id/book', async (req, res) => {
                  <p>Student <b>${studentName}</b> has requested a demo session for <b>${subject}</b> at <b>${timing}</b>.</p>
                  <p>Please log in to your <a href="${getFrontendUrl(req)}/dashboard/tutor">dashboard</a> to Accept or Reject this request.</p>
                  <p>Best regards,<br/>Cuvasol Tutor Team</p>`,
+        }).then(() => {
+          console.log(`[Booking] Tutor notification email sent to: ${tutorUser.email}`);
+        }).catch((mailError) => {
+          console.error('[Booking] Failed to send tutor notification:', mailError.message);
         });
-        console.log(`[Booking] Tutor notification email sent to: ${tutorUser.email}`);
       } else {
         console.warn(`[Booking] Could not find email for tutor user: ${tutor.userId}`);
       }
@@ -412,7 +415,7 @@ router.post('/:id/book-verification-demo', async (req, res) => {
     try {
       const tutorUser = await User.findById(tutor.userId);
       if (tutorUser && tutorUser.email) {
-        await transporter.sendMail({
+        transporter.sendMail({
           from: process.env.EMAIL_FROM || '"Cuvasol Tutor" <noreply@cuvasoltutor.com>',
           to: tutorUser.email,
           subject: 'Action Required: Verification Demo Class Requested',
@@ -422,6 +425,8 @@ router.post('/:id/book-verification-demo', async (req, res) => {
                  <p>Our administrator has requested a verification demo class with you on <b>${timing}</b>.</p>
                  <p>Please log in to your <a href="${getFrontendUrl(req)}/dashboard/tutor">dashboard</a> to Accept or Reject this request.</p>
                  <p>Best regards,<br/>Cuvasol Tutor Team</p>`,
+        }).catch((mailError) => {
+          console.error('[Verification Booking] Failed to send email:', mailError.message);
         });
       }
     } catch (mailError) {
@@ -711,14 +716,17 @@ router.put('/booking/:bookingId/status', async (req, res) => {
             `;
 
           console.log(`[Booking] Sending status update email to: ${recipientEmail}`);
-          await transporter.sendMail({
+          transporter.sendMail({
             from: process.env.EMAIL_FROM || '"Cuvasol Classroom" <noreply@cuvasoltutor.com>',
             to: recipientEmail,
             subject: emailSubject,
             text: emailText,
             html: emailHtml
+          }).then(() => {
+            console.log(`[Booking] Status update email sent successfully.`);
+          }).catch((mailError) => {
+            console.error('[Booking] Failed to send student status update email:', mailError.message);
           });
-          console.log(`[Booking] Status update email sent successfully.`);
         }
       } catch (mailError) {
         console.error('[Booking] Failed to send student status update email:', mailError.message);
@@ -752,14 +760,17 @@ router.put('/booking/:bookingId/status', async (req, res) => {
                 </p>
               </div>
             `;
-            await transporter.sendMail({
+            transporter.sendMail({
               from: process.env.EMAIL_FROM || '"Cuvasol Classroom" <noreply@cuvasoltutor.com>',
               to: tutorUser.email,
               subject: emailSubject,
               text: emailText,
               html: emailHtml
+            }).then(() => {
+              console.log(`[Booking] Cancellation email sent to tutor successfully.`);
+            }).catch((mailError) => {
+              console.error('[Booking] Failed to send tutor cancellation email:', mailError.message);
             });
-            console.log(`[Booking] Cancellation email sent to tutor successfully.`);
           }
         }
       } catch (mailError) {
@@ -889,7 +900,7 @@ router.put('/:id/admin', async (req, res) => {
     if (status === 'approved' && tutor.userId && tutor.userId.email) {
       try {
         console.log(`[Admin Approval] Attempting to notify tutor of approval: ${tutor.userId.email}`);
-        await transporter.sendMail({
+        transporter.sendMail({
           from: process.env.EMAIL_FROM || '"Cuvasol Tutor" <noreply@cuvasoltutor.com>',
           to: tutor.userId.email,
           subject: 'Tutor Profile Approved!',
@@ -919,15 +930,18 @@ router.put('/:id/admin', async (req, res) => {
               </p>
             </div>
           `
+        }).then(() => {
+          console.log(`[Admin Approval] Tutor approval email sent to: ${tutor.userId.email}`);
+        }).catch((mailError) => {
+          console.error('[Admin Approval] Failed to send tutor approval email:', mailError.message);
         });
-        console.log(`[Admin Approval] Tutor approval email sent to: ${tutor.userId.email}`);
       } catch (mailError) {
         console.error('[Admin Approval] Failed to send tutor approval email:', mailError.message);
       }
     } else if (status === 'rejected' && tutor.userId && tutor.userId.email) {
       try {
         console.log(`[Admin Rejection] Attempting to notify tutor of rejection: ${tutor.userId.email}`);
-        await transporter.sendMail({
+        transporter.sendMail({
           from: process.env.EMAIL_FROM || '"Cuvasol Tutor" <noreply@cuvasoltutor.com>',
           to: tutor.userId.email,
           subject: 'Tutor Profile Application Update',
@@ -957,8 +971,11 @@ router.put('/:id/admin', async (req, res) => {
               </p>
             </div>
           `
+        }).then(() => {
+          console.log(`[Admin Rejection] Tutor rejection email sent to: ${tutor.userId.email}`);
+        }).catch((mailError) => {
+          console.error('[Admin Rejection] Failed to send tutor rejection email:', mailError.message);
         });
-        console.log(`[Admin Rejection] Tutor rejection email sent to: ${tutor.userId.email}`);
       } catch (mailError) {
         console.error('[Admin Rejection] Failed to send tutor rejection email:', mailError.message);
       }

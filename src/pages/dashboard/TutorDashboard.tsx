@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Users, Clock, DollarSign, BookOpen, AlertCircle, Save, CheckCircle, PlusCircle, Check, Video, Sparkles, Trash2, GraduationCap, Award } from "lucide-react";
+import { Calendar, Users, Clock, DollarSign, BookOpen, AlertCircle, Save, CheckCircle, PlusCircle, Check, Video, Sparkles, Trash2, GraduationCap, Award, Settings } from "lucide-react";
 import { CLASS_TAUGHT_OPTIONS, BOARD_TAUGHT_OPTIONS } from "@/pages/RegisterTutor";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -587,7 +587,10 @@ const TutorDashboard = () => {
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="profile" className="rounded-lg px-6 py-2.5 shrink-0">Profile Settings</TabsTrigger>
+            <TabsTrigger value="profile" className="rounded-lg px-6 py-2.5 shrink-0 flex items-center gap-1.5">
+              <Settings className="h-4 w-4" />
+              Profile Settings
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="demos">

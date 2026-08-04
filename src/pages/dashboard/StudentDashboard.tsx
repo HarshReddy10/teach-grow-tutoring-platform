@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { Calendar, BookOpen, CreditCard, User, Search, Clock, Save, History, PlayCircle, Star, Video, MapPin } from "lucide-react";
+import { Calendar, BookOpen, CreditCard, User, Search, Clock, Save, History, PlayCircle, Star, Video, MapPin, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -350,7 +350,10 @@ const StudentDashboard = () => {
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="profile" className="rounded-lg px-6 py-2.5 shrink-0">Settings</TabsTrigger>
+            <TabsTrigger value="profile" className="rounded-lg px-6 py-2.5 shrink-0 flex items-center gap-1.5">
+              <Settings className="h-4 w-4" />
+              Settings
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="upcoming">
