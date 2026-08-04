@@ -1,5 +1,5 @@
-// node backend/scripts/seedTutor.js
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const mongoose = require('mongoose');
 const User = require('../schemas/userSchema');
 const Tutor = require('../schemas/tutorSchema');
@@ -47,6 +47,20 @@ const seed = async () => {
       availability: [
         { day: 'Monday', startTime: '09:00', endTime: '17:00' },
         { day: 'Wednesday', startTime: '09:00', endTime: '17:00' }
+      ],
+      workExperience: [
+        {
+          role: 'Senior Physics Lecturer',
+          company: 'Delhi Public School',
+          duration: '2022 - Present',
+          description: 'Teaching AP Physics and senior secondary classes. Achieved 95%+ pass rate in board exams.'
+        },
+        {
+          role: 'Tutor',
+          company: 'Apex Education Center',
+          duration: '2020 - 2022',
+          description: 'Provided group and 1-on-1 tutoring for Mathematics and Physics.'
+        }
       ]
     });
 

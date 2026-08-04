@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import PageLayout from "@/components/layout/PageLayout";
-import { Eye, EyeOff, Calendar, Clock, PlusCircle, Check, GraduationCap, Award } from "lucide-react";
+import { Eye, EyeOff, Calendar, Clock, PlusCircle, Check, GraduationCap, Award, Briefcase, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { GoogleLogin } from "@react-oauth/google";
 
@@ -92,6 +92,11 @@ const RegisterTutor = () => {
   const [pincode, setPincode] = useState("");
   const [qualification, setQualification] = useState("");
   const [experience, setExperience] = useState("");
+  const [workExperience, setWorkExperience] = useState<{ role: string; company: string; duration: string; description?: string }[]>([]);
+  const [newExpRole, setNewExpRole] = useState("");
+  const [newExpCompany, setNewExpCompany] = useState("");
+  const [newExpDuration, setNewExpDuration] = useState("");
+  const [newExpDescription, setNewExpDescription] = useState("");
   const [category, setCategory] = useState("");
   const [teachingMode, setTeachingMode] = useState("");
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
@@ -328,6 +333,7 @@ const RegisterTutor = () => {
       hearAboutUs,
       experience,
       qualification,
+      workExperience: JSON.stringify(workExperience),
       city,
       pincode,
       teaching_mode: teachingMode.toLowerCase(),
@@ -514,6 +520,126 @@ const RegisterTutor = () => {
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Work Experience Section */}
+              <div className="space-y-4 border rounded-xl p-4 bg-secondary/5 animate-in fade-in duration-200">
+                <Label className="text-sm font-bold flex items-center gap-1.5 text-foreground">
+                  <Briefcase className="h-4 w-4 text-primary" /> Work Experience History <span className="text-xs text-muted-foreground font-normal">(Optional)</span>
+                </Label>
+                
+                {/* Work Experience List */}
+                {workExperience.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic p-3 bg-background rounded-lg border border-dashed text-center">
+                    No work experience added yet. Add your previous teaching or professional roles below.
+                  </p>
+                ) : (
+                  <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
+                    {workExperience.map((exp, expIdx) => (
+                      <div key={expIdx} className="flex items-start justify-between gap-4 bg-background p-3 rounded-lg border shadow-sm transition-all hover:border-primary/20 relative">
+                        <div className="flex-1 space-y-0.5">
+                          <div className="font-bold text-sm text-foreground">{exp.role}</div>
+                          <div className="text-xs font-semibold text-primary">{exp.company}</div>
+                          <div className="text-[10px] text-muted-foreground font-medium">{exp.duration}</div>
+                          {exp.description && (
+                            <p className="text-xs text-muted-foreground leading-relaxed mt-1.5 border-t pt-1.5 border-border/40">
+                              {exp.description}
+                            </p>
+                          )}
+                        </div>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          size="sm"
+                          className="h-8 w-8 p-0 text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 shrink-0"
+                          onClick={() => {
+                            setWorkExperience(prev => prev.filter((_, idx) => idx !== expIdx));
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Add New Work Experience Sub-Form */}
+                <div className="space-y-3 pt-3 border-t border-border/40">
+                  <p className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">Add Work Experience</p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-bold text-muted-foreground uppercase">Role / Position</Label>
+                      <Input 
+                        placeholder="e.g. Senior Physics Teacher" 
+                        value={newExpRole} 
+                        onChange={(e) => setNewExpRole(e.target.value)}
+                        className="h-9 text-xs bg-background"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-bold text-muted-foreground uppercase">School / Institution / Company</Label>
+                      <Input 
+                        placeholder="e.g. Delhi Public School" 
+                        value={newExpCompany} 
+                        onChange={(e) => setNewExpCompany(e.target.value)}
+                        className="h-9 text-xs bg-background"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="space-y-1 sm:col-span-1">
+                      <Label className="text-[10px] font-bold text-muted-foreground uppercase">Duration</Label>
+                      <Input 
+                        placeholder="e.g. 2022 - Present or 3 years" 
+                        value={newExpDuration} 
+                        onChange={(e) => setNewExpDuration(e.target.value)}
+                        className="h-9 text-xs bg-background"
+                      />
+                    </div>
+                    <div className="space-y-1 sm:col-span-2">
+                      <Label className="text-[10px] font-bold text-muted-foreground uppercase">Description / Key Achievements</Label>
+                      <Input 
+                        placeholder="e.g. Taught AP level courses, prepared curriculum..." 
+                        value={newExpDescription} 
+                        onChange={(e) => setNewExpDescription(e.target.value)}
+                        className="h-9 text-xs bg-background"
+                      />
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="button" 
+                    variant="secondary"
+                    onClick={() => {
+                      if (!newExpRole.trim()) {
+                        toast.error("Please enter a role/position.");
+                        return;
+                      }
+                      if (!newExpCompany.trim()) {
+                        toast.error("Please enter a school or company name.");
+                        return;
+                      }
+                      if (!newExpDuration.trim()) {
+                        toast.error("Please enter duration.");
+                        return;
+                      }
+                      setWorkExperience(prev => [...prev, {
+                        role: newExpRole.trim(),
+                        company: newExpCompany.trim(),
+                        duration: newExpDuration.trim(),
+                        description: newExpDescription.trim()
+                      }]);
+                      setNewExpRole("");
+                      setNewExpCompany("");
+                      setNewExpDuration("");
+                      setNewExpDescription("");
+                    }}
+                    className="h-9 text-xs shrink-0 w-full sm:w-auto"
+                  >
+                    <PlusCircle className="mr-1 h-3.5 w-3.5" /> Add Experience
+                  </Button>
+                </div>
               </div>
 
               {(teachingMode === "Offline" || teachingMode === "Both") && (

@@ -28,8 +28,14 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
     return `₹${minRate} - ₹${maxRate}`;
   };
 
+  const getMonthlyPackRate = () => {
+    const rates = (tutor as any).subjectRates?.map((sr: any) => sr.rate) || [];
+    const baseRate = rates.length > 0 ? Math.min(...rates) : (tutor.hourlyRate || 300);
+    return Math.round(baseRate * 12 * 0.70);
+  };
+
   return (
-    <div className="group overflow-hidden rounded-xl border bg-card shadow-card transition-shadow hover:shadow-card-hover">
+    <div className="group overflow-hidden rounded-xl border bg-card shadow-card transition-shadow hover:shadow-card-hover flex flex-col h-full">
       <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
         <img
           src={photoSrc}
@@ -54,7 +60,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
         )}
       </div>
 
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-grow">
         <div className="mb-2 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-1.5">
@@ -118,10 +124,23 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
           )}
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex-grow" />
+
+        <div className="flex items-center justify-between mt-4">
           <span className="text-lg font-semibold text-foreground">{getRateDisplay()}<span className="text-sm font-normal text-muted-foreground">/hr</span></span>
           <Button size="sm" asChild>
             <Link to={`/tutors/${tutor.id}`}>Book Demo</Link>
+          </Button>
+        </div>
+
+        <div className="mt-3">
+          <Button
+            asChild
+            className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-1.5 border-0 cursor-pointer text-xs sm:text-sm"
+          >
+            <Link to={`/tutors/${tutor.id}?selectPack=true`}>
+              <span>✨</span> 30% OFF - Monthly Pack (₹{getMonthlyPackRate()}/mo)
+            </Link>
           </Button>
         </div>
       </div>

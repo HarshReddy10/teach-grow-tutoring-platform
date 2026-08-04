@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const mongoose = require('mongoose');
 const User = require('./schemas/userSchema');
 const Tutor = require('./schemas/tutorSchema');
@@ -86,7 +87,21 @@ async function seed() {
       experience: 10,
       city: 'Bangalore',
       status: 'approved',
-      availableTimings: ['10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM']
+      availableTimings: ['10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM'],
+      workExperience: [
+        {
+          role: 'Senior Coding Educator',
+          company: 'Tech Academy Bangalore',
+          duration: '2021 - Present',
+          description: 'Design curriculum and teach JavaScript/Python/C++ to kids and college students.'
+        },
+        {
+          role: 'Professional Chess Coach',
+          company: 'FIDE Chess Academy',
+          duration: '2018 - 2021',
+          description: 'Coached over 50 juniors to state and national level chess tournaments.'
+        }
+      ]
     });
     await tutor.save();
     console.log("Tutor registered.");

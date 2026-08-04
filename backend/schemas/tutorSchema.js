@@ -54,6 +54,12 @@ const tutorSchema = new mongoose.Schema({
     rate: { type: Number, required: true },
     effectiveFrom: { type: Date, required: true, default: Date.now },
     effectiveTo: { type: Date }
+  }],
+  workExperience: [{
+    role: { type: String, required: true },
+    company: { type: String, required: true },
+    duration: { type: String, required: true },
+    description: { type: String }
   }]
 }, { timestamps: true });
  

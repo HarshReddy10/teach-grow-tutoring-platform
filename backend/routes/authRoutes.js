@@ -131,6 +131,7 @@ router.post('/register', async (req, res) => {
 
       let parsedClassesTaught = [];
       let parsedBoardsTaught = [];
+      let parsedWorkExperience = [];
       try {
         if (typeof tutorData.classesTaught === 'string') {
           parsedClassesTaught = JSON.parse(tutorData.classesTaught);
@@ -141,6 +142,11 @@ router.post('/register', async (req, res) => {
           parsedBoardsTaught = JSON.parse(tutorData.boardsTaught);
         } else if (Array.isArray(tutorData.boardsTaught)) {
           parsedBoardsTaught = tutorData.boardsTaught;
+        }
+        if (typeof tutorData.workExperience === 'string') {
+          parsedWorkExperience = JSON.parse(tutorData.workExperience);
+        } else if (Array.isArray(tutorData.workExperience)) {
+          parsedWorkExperience = tutorData.workExperience;
         }
       } catch (err) { }
 
@@ -164,6 +170,7 @@ router.post('/register', async (req, res) => {
         subjects: parsedSubjects,
         classesTaught: parsedClassesTaught,
         boardsTaught: parsedBoardsTaught,
+        workExperience: parsedWorkExperience,
         subjectRates: parsedSubjectRates,
         availableTimings: parsedTimings,
         availability: parsedAvailability,

@@ -176,7 +176,7 @@ const calculatePlanPrice = (tutor, subject, planType) => {
     case '2 Days/Week (Monthly Pack)':
       return Math.round(subjectRate * 8 * 0.85);
     case '3 Days/Week (Monthly Pack)':
-      return Math.round(subjectRate * 12 * 0.80);
+      return Math.round(subjectRate * 12 * 0.70);
     default:
       return subjectRate;
   }
@@ -998,7 +998,7 @@ router.put('/:id/admin', async (req, res) => {
 // Tutor can update their profile details
 router.put('/:id/profile', async (req, res) => {
   try {
-    const { bio, qualification, experience, hourlyRate, category, subjects, photo, verificationDocument, subjectRates, address, googleMapsUrl, timezone, classesTaught, boardsTaught } = req.body;
+    const { bio, qualification, experience, hourlyRate, category, subjects, photo, verificationDocument, subjectRates, address, googleMapsUrl, timezone, classesTaught, boardsTaught, workExperience } = req.body;
     const updateData = {};
     if (bio !== undefined) updateData.bio = bio;
     if (qualification !== undefined) updateData.qualification = qualification;
@@ -1025,6 +1025,7 @@ router.put('/:id/profile', async (req, res) => {
     if (address !== undefined) currentTutor.address = address;
     if (classesTaught !== undefined) currentTutor.classesTaught = classesTaught;
     if (boardsTaught !== undefined) currentTutor.boardsTaught = boardsTaught;
+    if (workExperience !== undefined) currentTutor.workExperience = workExperience;
     if (googleMapsUrl !== undefined) {
       const { expandGoogleMapsUrl } = require('../utils/urlHelper');
       currentTutor.googleMapsUrl = await expandGoogleMapsUrl(googleMapsUrl);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Calendar, Users, Clock, DollarSign, BookOpen, AlertCircle, Save, CheckCircle, PlusCircle, Check, Video, Sparkles, Trash2, GraduationCap, Award, Settings } from "lucide-react";
+import { Calendar, Users, Clock, DollarSign, BookOpen, AlertCircle, Save, CheckCircle, PlusCircle, Check, Video, Sparkles, Trash2, GraduationCap, Award, Settings, Briefcase } from "lucide-react";
 import { CLASS_TAUGHT_OPTIONS, BOARD_TAUGHT_OPTIONS } from "@/pages/RegisterTutor";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -240,6 +240,13 @@ const TutorDashboard = () => {
   const [selectedDocFile, setSelectedDocFile] = useState<File | null>(null);
   const [docNamePreview, setDocNamePreview] = useState<string>("");
 
+  // Work Experience Editor states
+  const [workExperience, setWorkExperience] = useState<{ role: string; company: string; duration: string; description?: string }[]>([]);
+  const [newExpRole, setNewExpRole] = useState("");
+  const [newExpCompany, setNewExpCompany] = useState("");
+  const [newExpDuration, setNewExpDuration] = useState("");
+  const [newExpDescription, setNewExpDescription] = useState("");
+
   const handleDocFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -278,6 +285,7 @@ const TutorDashboard = () => {
             address: res.data.address || "",
             googleMapsUrl: res.data.googleMapsUrl || "",
           });
+          setWorkExperience(res.data.workExperience || []);
           setSelectedClasses(res.data.classesTaught || []);
           setSelectedBoards(res.data.boardsTaught || []);
           const legacyRates = res.data.subjectRates && res.data.subjectRates.length > 0
@@ -442,7 +450,8 @@ const TutorDashboard = () => {
         boardsTaught: selectedBoards,
         photo: uploadedPhotoUrl,
         verificationDocument: uploadedDocUrl,
-        timezone: tutorTimezone
+        timezone: tutorTimezone,
+        workExperience
       };
       
       console.log("[DEBUG] handleProfileUpdate: payload=", payload);
@@ -1308,6 +1317,126 @@ const TutorDashboard = () => {
                                  );
                                })}
                              </div>
+                           </div>
+                         </div>
+
+                         {/* Work Experience Section */}
+                         <div className="space-y-4 border rounded-xl p-4 bg-secondary/5">
+                           <Label className="text-sm font-extrabold text-foreground flex items-center gap-1.5">
+                             <Briefcase className="h-4 w-4 text-primary" /> Work Experience History
+                           </Label>
+                           
+                           {/* Work Experience List */}
+                           {workExperience.length === 0 ? (
+                             <p className="text-xs text-muted-foreground italic p-3 bg-background rounded-lg border border-dashed text-center">
+                               No work experience added yet. Add your previous teaching or professional roles below.
+                             </p>
+                           ) : (
+                             <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1">
+                               {workExperience.map((exp, expIdx) => (
+                                 <div key={expIdx} className="flex items-start justify-between gap-4 bg-background p-3 rounded-lg border shadow-sm transition-all hover:border-primary/20 relative">
+                                   <div className="flex-1 space-y-0.5">
+                                     <div className="font-bold text-sm text-foreground">{exp.role}</div>
+                                     <div className="text-xs font-semibold text-primary">{exp.company}</div>
+                                     <div className="text-[10px] text-muted-foreground font-medium">{exp.duration}</div>
+                                     {exp.description && (
+                                       <p className="text-xs text-muted-foreground leading-relaxed mt-1.5 border-t pt-1.5 border-border/40">
+                                         {exp.description}
+                                       </p>
+                                     )}
+                                   </div>
+                                   <Button 
+                                     type="button" 
+                                     variant="ghost" 
+                                     size="sm"
+                                     className="h-8 w-8 p-0 text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 shrink-0"
+                                     onClick={() => {
+                                       setWorkExperience(prev => prev.filter((_, idx) => idx !== expIdx));
+                                     }}
+                                   >
+                                     <Trash2 className="h-4 w-4" />
+                                   </Button>
+                                 </div>
+                               ))}
+                             </div>
+                           )}
+
+                           {/* Add New Work Experience Sub-Form */}
+                           <div className="space-y-3 pt-3 border-t border-border/40">
+                             <p className="text-xs font-extrabold text-muted-foreground uppercase tracking-wider">Add Work Experience</p>
+                             <div className="grid gap-3 sm:grid-cols-2">
+                               <div className="space-y-1">
+                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">Role / Position</Label>
+                                 <Input 
+                                   placeholder="e.g. Senior Physics Teacher" 
+                                   value={newExpRole} 
+                                   onChange={(e) => setNewExpRole(e.target.value)}
+                                   className="h-9 text-xs bg-background"
+                                 />
+                               </div>
+                               <div className="space-y-1">
+                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">School / Institution / Company</Label>
+                                 <Input 
+                                   placeholder="e.g. Delhi Public School" 
+                                   value={newExpCompany} 
+                                   onChange={(e) => setNewExpCompany(e.target.value)}
+                                   className="h-9 text-xs bg-background"
+                                 />
+                               </div>
+                             </div>
+                             
+                             <div className="grid gap-3 sm:grid-cols-3">
+                               <div className="space-y-1 sm:col-span-1">
+                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">Duration</Label>
+                                 <Input 
+                                   placeholder="e.g. 2022 - Present or 3 years" 
+                                   value={newExpDuration} 
+                                   onChange={(e) => setNewExpDuration(e.target.value)}
+                                   className="h-9 text-xs bg-background"
+                                 />
+                               </div>
+                               <div className="space-y-1 sm:col-span-2">
+                                 <Label className="text-[10px] font-bold text-muted-foreground uppercase">Description / Key Achievements</Label>
+                                 <Input 
+                                   placeholder="e.g. Taught AP level courses, prepared curriculum..." 
+                                   value={newExpDescription} 
+                                   onChange={(e) => setNewExpDescription(e.target.value)}
+                                   className="h-9 text-xs bg-background"
+                                 />
+                               </div>
+                             </div>
+
+                             <Button 
+                               type="button" 
+                               variant="secondary"
+                               onClick={() => {
+                                 if (!newExpRole.trim()) {
+                                   toast.error("Please enter a role/position.");
+                                   return;
+                                 }
+                                 if (!newExpCompany.trim()) {
+                                   toast.error("Please enter a school or company name.");
+                                   return;
+                                 }
+                                 if (!newExpDuration.trim()) {
+                                   toast.error("Please enter duration.");
+                                   return;
+                                 }
+                                 setWorkExperience(prev => [...prev, {
+                                   role: newExpRole.trim(),
+                                   company: newExpCompany.trim(),
+                                   duration: newExpDuration.trim(),
+                                   description: newExpDescription.trim()
+                                 }]);
+                                 setNewExpRole("");
+                                 setNewExpCompany("");
+                                 setNewExpDuration("");
+                                 setNewExpDescription("");
+                               }}
+                               className="h-9 text-xs shrink-0 w-full sm:w-auto"
+                             >
+                               <PlusCircle className="mr-1 h-3.5 w-3.5" /> Add Experience
+                             </Button>
                            </div>
                          </div>
 
