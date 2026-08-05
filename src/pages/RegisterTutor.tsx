@@ -456,7 +456,7 @@ const RegisterTutor = () => {
                     <SelectContent>
                       <SelectItem value="Online">Online</SelectItem>
                       <SelectItem value="Offline">Offline</SelectItem>
-                      <SelectItem value="Both">Both</SelectItem>
+                      <SelectItem value="Both">Online, Offline</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

@@ -113,7 +113,7 @@ const TutorCard = ({ tutor }: TutorCardProps) => {
             </span>
             <span className="flex items-center gap-1">
               <Monitor className="h-3.5 w-3.5" />
-              {tutor.mode}
+              {tutor.mode?.toLowerCase() === "both" ? "Online, Offline" : tutor.mode}
             </span>
           </div>
           {tutor.availability && tutor.availability.length > 0 && (

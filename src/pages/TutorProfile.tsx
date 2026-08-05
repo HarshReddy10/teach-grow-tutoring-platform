@@ -987,7 +987,7 @@ const TutorProfile = () => {
               <div className="flex-1">
                 <div className="mb-2 flex flex-wrap items-center gap-2">
                   <Badge className="bg-primary text-primary-foreground">{tutor.category}</Badge>
-                  <Badge variant="secondary">{tutor.mode}</Badge>
+                  <Badge variant="secondary">{tutor.mode?.toLowerCase() === "both" ? "Online, Offline" : tutor.mode}</Badge>
                   {tutor.boardsTaught && tutor.boardsTaught.length > 0 && (
                     <Badge variant="outline" className="bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border-indigo-200/50 font-medium">
                       {tutor.boardsTaught.join(" • ")}
@@ -1076,6 +1076,109 @@ const TutorProfile = () => {
               <CardHeader><CardTitle>About</CardTitle></CardHeader>
               <CardContent><p className="text-muted-foreground leading-relaxed">{tutor.bio}</p></CardContent>
             </Card>
+
+            {/* Work Experience Section */}
+            {tutor.workExperience && tutor.workExperience.length > 0 && (
+              <Card className="border-border/60 shadow-sm relative overflow-hidden">
+                <CardHeader className="pb-3 border-b">
+                  <CardTitle className="text-lg flex items-center gap-2 font-bold text-foreground">
+                    <Briefcase className="h-5 w-5 text-primary" /> Work Experience
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6 relative">
+                  {(() => {
+                    const defaultExperiences = [
+                      {
+                        role: `Senior ${tutor.subjects?.[0] || 'Subject'} Educator`,
+                        company: 'Elite Academy of Learning',
+                        duration: '2024 - Present',
+                        description: `Conducting personalized coaching and developing comprehensive study plans in ${tutor.subjects?.join(', ') || 'various subjects'}.`
+                      },
+                      {
+                        role: 'Educational Consultant & Instructor',
+                        company: 'National Coaching Institute',
+                        duration: '2022 - 2024',
+                        description: `Delivered high-quality guidance and conceptual lectures. Helped students prepare for school and board examinations.`
+                      }
+                    ];
+                    
+                    const experiences = tutor.workExperience;
+
+                    if (user) {
+                      return (
+                        <div className="space-y-6">
+                          {experiences.map((exp: any, idx: number) => (
+                            <div key={idx} className="flex gap-4 border-b border-border/30 pb-5 last:border-0 last:pb-0">
+                              <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
+                                <Briefcase className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 space-y-1">
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
+                                  <span className="font-bold text-foreground text-sm sm:text-base">{exp.role}</span>
+                                  <span className="text-[11px] text-muted-foreground bg-secondary/80 dark:bg-secondary/30 px-2.5 py-0.5 rounded-full font-bold">
+                                    {exp.duration}
+                                  </span>
+                                </div>
+                                <p className="text-sm font-semibold text-primary">{exp.company}</p>
+                                {exp.description && (
+                                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-1">
+                                    {exp.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="relative">
+                        {/* Blurred background preview */}
+                        <div className="space-y-6 blur-[5px] select-none pointer-events-none opacity-40">
+                          {defaultExperiences.map((exp, idx) => (
+                            <div key={idx} className="flex gap-4 border-b border-border/30 pb-5 last:border-0 last:pb-0">
+                              <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
+                                <Briefcase className="h-5 w-5" />
+                              </div>
+                              <div className="flex-1 space-y-1">
+                                <div className="flex justify-between items-center">
+                                  <span className="font-semibold text-foreground">{exp.role}</span>
+                                  <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+                                    {exp.duration}
+                                  </span>
+                                </div>
+                                <p className="text-sm font-medium text-primary">{exp.company}</p>
+                                <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                                  {exp.description}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Premium Lock Overlay */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/50 backdrop-blur-[3px] rounded-xl p-6 text-center animate-in fade-in duration-300">
+                          <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-3 shadow-md border border-primary/20 hover:scale-110 transition-transform duration-300">
+                            <Lock className="h-6 w-6" />
+                          </div>
+                          <h4 className="font-extrabold text-lg text-foreground mb-1">Unlock Work Experience</h4>
+                          <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mb-4 leading-relaxed">
+                            Please log in to view detailed employment history, roles, and schools taught by {tutor.name || 'this tutor'}.
+                          </p>
+                          <Button 
+                            onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/tutors/${id}`)}`)}
+                            className="shadow-md rounded-full px-8 hover:scale-[1.02] active:scale-[0.98] transition-transform font-bold"
+                          >
+                            Log In to View
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </CardContent>
+              </Card>
+            )}
 
             <Card>
               <CardHeader><CardTitle>Subjects & Skills</CardTitle></CardHeader>
@@ -1223,109 +1326,6 @@ const TutorProfile = () => {
                 </CardContent>
               </Card>
             )}
-
-            {/* Work Experience Section */}
-            <Card className="border-border/60 shadow-sm relative overflow-hidden">
-              <CardHeader className="pb-3 border-b">
-                <CardTitle className="text-lg flex items-center gap-2 font-bold text-foreground">
-                  <Briefcase className="h-5 w-5 text-primary" /> Work Experience
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6 relative">
-                {(() => {
-                  const defaultExperiences = [
-                    {
-                      role: `Senior ${tutor.subjects?.[0] || 'Subject'} Educator`,
-                      company: 'Elite Academy of Learning',
-                      duration: '2024 - Present',
-                      description: `Conducting personalized coaching and developing comprehensive study plans in ${tutor.subjects?.join(', ') || 'various subjects'}.`
-                    },
-                    {
-                      role: 'Educational Consultant & Instructor',
-                      company: 'National Coaching Institute',
-                      duration: '2022 - 2024',
-                      description: `Delivered high-quality guidance and conceptual lectures. Helped students prepare for school and board examinations.`
-                    }
-                  ];
-                  
-                  const experiences = (tutor.workExperience && tutor.workExperience.length > 0)
-                    ? tutor.workExperience
-                    : defaultExperiences;
-
-                  if (user) {
-                    return (
-                      <div className="space-y-6">
-                        {experiences.map((exp: any, idx: number) => (
-                          <div key={idx} className="flex gap-4 border-b border-border/30 pb-5 last:border-0 last:pb-0">
-                            <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
-                              <Briefcase className="h-5 w-5" />
-                            </div>
-                            <div className="flex-1 space-y-1">
-                              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-                                <span className="font-bold text-foreground text-sm sm:text-base">{exp.role}</span>
-                                <span className="text-[11px] text-muted-foreground bg-secondary/80 dark:bg-secondary/30 px-2.5 py-0.5 rounded-full font-bold">
-                                  {exp.duration}
-                                </span>
-                              </div>
-                              <p className="text-sm font-semibold text-primary">{exp.company}</p>
-                              {exp.description && (
-                                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mt-1">
-                                  {exp.description}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div className="relative">
-                      {/* Blurred background preview */}
-                      <div className="space-y-6 blur-[5px] select-none pointer-events-none opacity-40">
-                        {defaultExperiences.map((exp, idx) => (
-                          <div key={idx} className="flex gap-4 border-b border-border/30 pb-5 last:border-0 last:pb-0">
-                            <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
-                              <Briefcase className="h-5 w-5" />
-                            </div>
-                            <div className="flex-1 space-y-1">
-                              <div className="flex justify-between items-center">
-                                <span className="font-semibold text-foreground">{exp.role}</span>
-                                <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
-                                  {exp.duration}
-                                </span>
-                              </div>
-                              <p className="text-sm font-medium text-primary">{exp.company}</p>
-                              <p className="text-xs text-muted-foreground leading-relaxed mt-1">
-                                {exp.description}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Premium Lock Overlay */}
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/50 backdrop-blur-[3px] rounded-xl p-6 text-center animate-in fade-in duration-300">
-                        <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-3 shadow-md border border-primary/20 hover:scale-110 transition-transform duration-300">
-                          <Lock className="h-6 w-6" />
-                        </div>
-                        <h4 className="font-extrabold text-lg text-foreground mb-1">Unlock Work Experience</h4>
-                        <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mb-4 leading-relaxed">
-                          Please log in to view detailed employment history, roles, and schools taught by {tutor.name || 'this tutor'}.
-                        </p>
-                        <Button 
-                          onClick={() => navigate(`/login?redirect=${encodeURIComponent(`/tutors/${id}`)}`)}
-                          className="shadow-md rounded-full px-8 hover:scale-[1.02] active:scale-[0.98] transition-transform font-bold"
-                        >
-                          Log In to View
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </CardContent>
-            </Card>
 
             <Card>
               <CardHeader>
