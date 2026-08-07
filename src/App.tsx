@@ -143,11 +143,11 @@ const App = () => {
                   The website is temporarily facing connection issues. We are working to restore service and expect to resolve it within the next 24 hours. Please try again shortly.
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <div className="flex justify-center">
                   <button
                     onClick={handleRetry}
                     disabled={isChecking}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer min-w-[140px]"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer min-w-[160px]"
                   >
                     {isChecking ? (
                       <RefreshCw className="h-4 w-4 animate-spin" />
@@ -156,21 +156,7 @@ const App = () => {
                     )}
                     <span>Try Again</span>
                   </button>
-                  
-                  <button
-                    onClick={() => setShowNetworkAlert(false)}
-                    className="w-full sm:w-auto px-6 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer"
-                  >
-                    Dismiss
-                  </button>
                 </div>
-
-                <button
-                  onClick={() => setShowNetworkAlert(false)}
-                  className="absolute top-4 right-4 p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 rounded-lg transition-colors cursor-pointer"
-                >
-                  <X className="h-5 w-5" />
-                </button>
               </div>
             </div>
           )}
