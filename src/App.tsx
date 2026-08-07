@@ -125,39 +125,52 @@ const App = () => {
       >
         <TooltipProvider>
           {showNetworkAlert && (
-            <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] w-[90%] max-w-xl animate-in slide-in-from-top-4 duration-300">
-              <div className="bg-red-500/10 dark:bg-red-950/30 backdrop-blur-md border border-red-500/30 text-zinc-900 dark:text-zinc-100 p-4 rounded-xl shadow-[0_8px_32px_rgba(239,68,68,0.08)] flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 p-2 bg-red-500/20 text-red-500 rounded-lg">
-                    <AlertCircle className="h-5 w-5 animate-pulse" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-red-650 dark:text-red-400">Connection Issue</h4>
-                    <p className="text-xs text-zinc-650 dark:text-zinc-405">
-                      The website is temporarily facing network issues. Please try again.
-                    </p>
-                  </div>
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-zinc-950/70 backdrop-blur-md animate-in fade-in duration-300">
+              <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl p-6 sm:p-8 max-w-lg w-full text-center relative overflow-hidden animate-in zoom-in-95 duration-300">
+                {/* Decorative top border gradient */}
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 via-amber-500 to-red-600" />
+                
+                {/* Large warning icon */}
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 shadow-inner">
+                  <AlertCircle className="h-10 w-10 animate-pulse" />
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+
+                <h3 className="text-xl sm:text-2xl font-bold text-zinc-900 dark:text-zinc-50 mb-3 tracking-tight">
+                  Temporary Network Issue
+                </h3>
+                
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                  The website is temporarily facing connection issues. We are working to restore service as quickly as possible. Please try again shortly.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                   <button
                     onClick={handleRetry}
                     disabled={isChecking}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-650 hover:bg-red-700 disabled:bg-red-800 text-white rounded-lg text-xs font-semibold shadow-md transition-all duration-200 cursor-pointer"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200 cursor-pointer min-w-[140px]"
                   >
                     {isChecking ? (
-                      <RefreshCw className="h-3 w-3 animate-spin" />
+                      <RefreshCw className="h-4 w-4 animate-spin" />
                     ) : (
-                      <RefreshCw className="h-3 w-3" />
+                      <RefreshCw className="h-4 w-4" />
                     )}
                     <span>Try Again</span>
                   </button>
+                  
                   <button
                     onClick={() => setShowNetworkAlert(false)}
-                    className="p-1.5 hover:bg-red-500/10 dark:hover:bg-red-500/20 text-zinc-400 hover:text-zinc-200 rounded-lg transition-colors cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer"
                   >
-                    <X className="h-4 w-4" />
+                    Dismiss
                   </button>
                 </div>
+
+                <button
+                  onClick={() => setShowNetworkAlert(false)}
+                  className="absolute top-4 right-4 p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-650 dark:hover:text-zinc-200 rounded-lg transition-colors cursor-pointer"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
             </div>
           )}
