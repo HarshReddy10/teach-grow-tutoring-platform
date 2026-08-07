@@ -140,7 +140,7 @@ const App = () => {
                 </h3>
                 
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed">
-                  The website is temporarily facing connection issues. We are working to restore service as quickly as possible. Please try again shortly.
+                  The website is temporarily facing connection issues. We are working to restore service and expect to resolve it within the next 24 hours. Please try again shortly.
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
