@@ -66,14 +66,42 @@ app.get('/', (req, res) => {
 
 const PORT = Number(process.env.PORT) || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/teachgrow';
-// console.log("console : " + MONGO_URI);
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server is running on port ${PORT} (NODE_ENV=${process.env.NODE_ENV || 'undefined'})`);
-    });
-  })
-  .catch((err) => {
-    console.error('Failed to connect to MongoDB', err);
+
+let cachedConnection = null;
+
+const connectDB = async () => {
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    return cachedConnection;
+  }
+  console.log('Initializing new MongoDB connection...');
+  cachedConnection = await mongoose.connect(MONGO_URI);
+  return cachedConnection;
+};
+
+// Middleware to ensure DB connection is established for serverless environments (Vercel)
+if (process.env.VERCEL) {
+  app.use(async (req, res, next) => {
+    try {
+      await connectDB();
+      next();
+    } catch (err) {
+      console.error('Database connection failed in serverless handler:', err);
+      res.status(500).json({ error: 'Database connection failed', details: err.message });
+    }
   });
+} else {
+  // Traditional/local setup: connect and start server
+  connectDB()
+    .then(() => {
+      console.log('Connected to MongoDB');
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server is running on port ${PORT} (NODE_ENV=${process.env.NODE_ENV || 'undefined'})`);
+      });
+    })
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB during startup', err);
+    });
+}
+
+module.exports = app;
+
