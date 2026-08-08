@@ -48,22 +48,6 @@ app.use(cors({
 }));
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/api/tutors', tutorRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/upload', uploadRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/messages', messageRoutes);
-
-app.get('/api/health', (_req, res) => {
-  res.status(200).json({ status: 'ok', service: 'cuvasol-backend' });
-});
-
-app.get('/', (req, res) => {
-  res.send('Cuvasol Tutor - Backend with Mongoose');
-});
-
 const PORT = Number(process.env.PORT) || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/teachgrow';
 
@@ -89,8 +73,26 @@ if (process.env.VERCEL) {
       res.status(500).json({ error: 'Database connection failed', details: err.message });
     }
   });
-} else {
-  // Traditional/local setup: connect and start server
+}
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/tutors', tutorRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/messages', messageRoutes);
+
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({ status: 'ok', service: 'cuvasol-backend' });
+});
+
+app.get('/', (req, res) => {
+  res.send('Cuvasol Tutor - Backend with Mongoose');
+});
+
+// Traditional/local setup: connect and start server (if not on Vercel)
+if (!process.env.VERCEL) {
   connectDB()
     .then(() => {
       console.log('Connected to MongoDB');
