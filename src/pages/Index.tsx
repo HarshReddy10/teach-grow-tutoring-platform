@@ -268,7 +268,7 @@ const Index = () => {
             </Button>
           </div>
 
-          <div className="flex md:grid gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-none">
+          <div className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-none">
             {isLoading ? (
               [1, 2, 3].map((i) => (
                 <div key={i} className="flex-shrink-0 w-[290px] xs:w-[320px] md:w-auto md:max-w-none rounded-xl border bg-card p-4 shadow-card">

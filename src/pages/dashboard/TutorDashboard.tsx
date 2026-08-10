@@ -543,8 +543,18 @@ const TutorDashboard = () => {
                   <p className="whitespace-pre-wrap leading-relaxed">{tutorProfile.rejectionReason}</p>
                 </div>
               )}
-              <span className="block mt-3 font-semibold text-foreground">
-                How to resolve: Please update your bio, qualification, or re-upload a clean, valid Resume/CV document (PDF/Image) below and click "Update Public Profile" to automatically re-submit your profile for review!
+              <span className="block mt-3 font-semibold text-foreground leading-loose">
+                How to resolve: Please update your bio, qualification, or re-upload a clean, valid Resume/CV document (PDF/Image) under{" "}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setActiveTab("profile")}
+                  className="mx-1 h-8 px-3 border-rose-200 dark:border-rose-900 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg text-xs shadow-sm inline-flex items-center gap-1.5 cursor-pointer align-middle transition-all"
+                >
+                  <Settings className="h-3.5 w-3.5" />
+                  Profile Settings
+                </Button>{" "}
+                and click "Update Public Profile" to automatically re-submit your profile for review!
               </span>
             </AlertDescription>
           </Alert>
@@ -596,7 +606,14 @@ const TutorDashboard = () => {
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger value="profile" className="rounded-lg px-6 py-2.5 shrink-0 flex items-center gap-1.5">
+            <TabsTrigger
+              value="profile"
+              className={`rounded-lg px-6 py-2.5 shrink-0 flex items-center gap-1.5 transition-all ${
+                tutorProfile?.status === "rejected"
+                  ? "border border-rose-500 bg-rose-500/10 text-rose-700 dark:text-rose-400 font-semibold hover:bg-rose-500/20 data-[state=active]:bg-rose-600 data-[state=active]:text-white"
+                  : ""
+              }`}
+            >
               <Settings className="h-4 w-4" />
               Profile Settings
             </TabsTrigger>

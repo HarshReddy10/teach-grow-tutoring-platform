@@ -140,6 +140,15 @@ const App = () => {
                 {/* Decorative top border gradient */}
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-red-500 via-amber-500 to-red-600" />
                 
+                {/* Close button */}
+                <button
+                  onClick={() => setShowNetworkAlert(false)}
+                  className="absolute right-4 top-4 rounded-lg p-1.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-200 dark:focus:ring-zinc-800 cursor-pointer"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+                
                 {/* Large warning icon */}
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400 shadow-inner">
                   <AlertCircle className="h-10 w-10 animate-pulse" />
@@ -150,7 +159,7 @@ const App = () => {
                 </h3>
                 
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed">
-                  The website is temporarily facing connection issues. We are working to restore service and expect to resolve it within the next 24 hours. Please try again shortly.
+                  The website is temporarily facing connection issues. We are working to restore service. Please try again shortly.
                 </p>
 
                 <div className="flex justify-center">
