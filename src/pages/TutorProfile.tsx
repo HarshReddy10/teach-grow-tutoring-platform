@@ -1630,7 +1630,7 @@ const TutorProfile = () => {
                                 {isValidDate(packStartDate) ? format(packStartDate as Date, "PPP") : <span>Pick a start date</span>}
                               </Button>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent className="w-auto p-0" align="center">
                               <Calendar
                                 mode="single"
                                 selected={packStartDate}
@@ -1746,7 +1746,7 @@ const TutorProfile = () => {
                               {isValidDate(date) ? format(date as Date, "PPP") : <span>Pick a date</span>}
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-0" align="center">
                             <Calendar
                               mode="single"
                               selected={date}

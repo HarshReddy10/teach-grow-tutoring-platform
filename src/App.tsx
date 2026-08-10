@@ -32,6 +32,16 @@ import TutorWelcome from "./pages/TutorWelcome";
 
 const queryClient = new QueryClient();
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function TrackPageViews() {
   const location = useLocation();
 
@@ -163,6 +173,7 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <TrackPageViews />
             <AuthProvider>
               <Routes>
