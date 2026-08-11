@@ -226,6 +226,7 @@ const TutorDashboard = () => {
     qualification: "",
     address: "",
     googleMapsUrl: "",
+    mode: "Online",
   });
   const [subjectRates, setSubjectRates] = useState<{ subject: string; rate: number }[]>([]);
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
@@ -279,11 +280,21 @@ const TutorDashboard = () => {
           if (res.data.timezone) {
             setTutorTimezone(res.data.timezone);
           }
+          const getFormattedMode = (m?: string) => {
+            if (!m) return "Online";
+            const norm = m.toLowerCase().trim();
+            if (norm === "online") return "Online";
+            if (norm === "offline") return "Offline";
+            if (norm === "both") return "Both";
+            return "Online";
+          };
+
           setProfileData({
             bio: res.data.bio || "",
             qualification: res.data.qualification || "",
             address: res.data.address || "",
             googleMapsUrl: res.data.googleMapsUrl || "",
+            mode: getFormattedMode(res.data.mode),
           });
           setWorkExperience(res.data.workExperience || []);
           setSelectedClasses(res.data.classesTaught || []);
@@ -434,6 +445,12 @@ const TutorDashboard = () => {
         uploadedDocUrl = uploadRes.data.url;
       }
 
+      if ((profileData.mode === "Offline" || profileData.mode === "Both") && !profileData.address.trim()) {
+        toast.error("Please provide a classroom address for Offline/Both teaching mode.");
+        setIsSavingProfile(false);
+        return;
+      }
+
       if (subjectRates.length === 0) {
         toast.error("Please add at least one subject with a rate.");
         setIsSavingProfile(false);
@@ -445,6 +462,7 @@ const TutorDashboard = () => {
         qualification: profileData.qualification,
         address: profileData.address,
         googleMapsUrl: profileData.googleMapsUrl,
+        mode: profileData.mode,
         subjectRates,
         classesTaught: selectedClasses,
         boardsTaught: selectedBoards,
@@ -1237,23 +1255,42 @@ const TutorDashboard = () => {
                             <Input id="qualification" value={profileData.qualification} onChange={(e) => setProfileData({...profileData, qualification: e.target.value.replace(/[^a-zA-Z0-9\s.()/-]/g, '')})} placeholder="e.g. M.Sc. in Mathematics" className="bg-secondary/20 shadow-sm" />
                           </div>
                           
-                          <div className="space-y-2">
-                            <Label htmlFor="timezone" className="text-sm font-semibold">Time Zone</Label>
-                            <Select value={tutorTimezone} onValueChange={setTutorTimezone}>
-                              <SelectTrigger id="timezone" className="bg-secondary/20 border-border/50">
-                                <SelectValue placeholder="Select timezone" />
-                              </SelectTrigger>
-                              <SelectContent className="max-h-[300px]">
-                                {timezonesList.map((tz) => (
-                                  <SelectItem key={tz} value={tz}>
-                                    {tz}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="space-y-2">
+                              <Label htmlFor="timezone" className="text-sm font-semibold">Time Zone</Label>
+                              <Select value={tutorTimezone} onValueChange={setTutorTimezone}>
+                                <SelectTrigger id="timezone" className="bg-secondary/20 border-border/50">
+                                  <SelectValue placeholder="Select timezone" />
+                                </SelectTrigger>
+                                <SelectContent className="max-h-[300px]">
+                                  {timezonesList.map((tz) => (
+                                    <SelectItem key={tz} value={tz}>
+                                      {tz}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="mode" className="text-sm font-semibold">Teaching Mode</Label>
+                              <Select 
+                                value={profileData.mode} 
+                                onValueChange={(val) => setProfileData({...profileData, mode: val})}
+                              >
+                                <SelectTrigger id="mode" className="bg-secondary/20 border-border/50">
+                                  <SelectValue placeholder="Select teaching mode" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Online">Online Classes</SelectItem>
+                                  <SelectItem value="Offline">Offline Classes</SelectItem>
+                                  <SelectItem value="Both">Both (Online & Offline)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                           </div>
 
-                         {(tutorProfile?.mode?.toLowerCase() === "offline" || tutorProfile?.mode?.toLowerCase() === "both") && (
+                         {(profileData.mode?.toLowerCase() === "offline" || profileData.mode?.toLowerCase() === "both") && (
                            <div className="grid gap-4 sm:grid-cols-2 p-4 border rounded-xl bg-secondary/5 animate-in fade-in slide-in-from-top-2 duration-200">
                              <div className="space-y-2">
                                <Label htmlFor="address" className="text-sm font-semibold">Classroom Address</Label>
