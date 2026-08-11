@@ -122,7 +122,7 @@ const RegisterStudent = () => {
         <div className="w-full max-w-5xl bg-transparent sm:bg-card/95 backdrop-blur-none sm:backdrop-blur-sm rounded-none sm:rounded-2xl border-none sm:border border-border/60 shadow-none sm:shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch relative z-10 my-4">
 
           {/* Left Column: Dark Blue Value Proposition */}
-          <div className={`relative bg-slate-950 text-white p-8 xl:p-12 flex-col justify-between overflow-hidden lg:flex lg:col-span-5 ${showFormMobile ? 'hidden' : 'flex min-h-[calc(100vh-120px)] sm:min-h-[600px] lg:min-h-0'
+          <div className={`relative bg-slate-950 text-white p-8 xl:p-12 flex-col overflow-hidden lg:flex lg:col-span-5 ${showFormMobile ? 'hidden' : 'flex min-h-[calc(100vh-120px)] sm:min-h-[600px] lg:min-h-0'
             }`}>
             {/* Grid overlay lines */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none animate-pulse duration-1000" />
@@ -134,27 +134,42 @@ const RegisterStudent = () => {
             <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-primary/10 rounded-full blur-[60px] pointer-events-none -ml-15 -mb-15" />
 
             {/* Top Logo & Portal Info */}
-            <div className="relative z-10">
-              <div className="flex items-center gap-2.5">
-                <img src="/logo.png" alt="Logo" className="h-9 w-auto" />
-                <div>
-                  <span className="font-bold text-base tracking-tight block leading-none text-white">Cuvasol</span>
-                  <span className="text-[10px] uppercase tracking-wider text-white/80 font-bold mt-1 block">Student Portal</span>
-                </div>
+            <div className="relative z-10 flex items-center gap-2.5 mb-6">
+              <img src="/logo.png" alt="Logo" className="h-9 w-auto" />
+              <div>
+                <span className="font-bold text-base tracking-tight block leading-none text-white">Cuvasol</span>
+                <span className="text-[10px] uppercase tracking-wider text-white/80 font-bold mt-1 block">Student Portal</span>
               </div>
             </div>
 
             {/* Middle Value Props */}
-            <div className="relative z-10 py-2 max-w-sm my-auto">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/90 text-[10px] font-semibold uppercase tracking-wider mb-5 border border-white/5">
-                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                Student Portal
-              </span>
-              <h2 className="text-2xl font-extrabold tracking-tight text-white mb-6">
+            <div className="relative z-10 max-w-sm flex-grow flex flex-col justify-start">
+              <div className="mb-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-white/90 text-[10px] font-semibold uppercase tracking-wider border border-white/5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                  Student Portal
+                </span>
+              </div>
+
+              {/* Promotional Offer Card */}
+              <div className="mb-6 p-5 rounded-xl bg-gradient-to-br from-primary/25 via-primary/10 to-transparent border border-primary/35 shadow-lg backdrop-blur-md relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 opacity-50" />
+                <span className="relative z-10 text-[9px] font-extrabold tracking-wider text-primary bg-white px-2 py-0.5 rounded uppercase inline-block mb-1.5">
+                  Special Offer
+                </span>
+                <h3 className="relative z-10 text-base font-extrabold text-white leading-snug">
+                  30% OFF on Monthly Tutor Plans
+                </h3>
+                <p className="relative z-10 text-[13px] text-white/90 mt-1 font-semibold">
+                  Plans starting from ₹1,500/month
+                </p>
+              </div>
+
+              <h2 className="text-2xl font-bold tracking-tight text-white mb-8">
                 Your Questions, Answered.
               </h2>
 
-              <div className="space-y-5">
+              <div className="space-y-[38px]">
                 {[
                   {
                     q: "Why should I register?",
@@ -171,18 +186,22 @@ const RegisterStudent = () => {
                   {
                     q: "What happens after I register?",
                     a: "Browse tutor profiles, request a demo slot, and start your first session."
+                  },
+                  {
+                    q: "Can I try before subscribing?",
+                    a: "Yes — book a FREE demo class"
                   }
                 ].map((item, idx) => (
-                  <div key={idx} className="space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-300" style={{ animationDelay: `${idx * 50}ms` }}>
-                    <div className="flex items-start gap-2">
-                      <div className="flex-shrink-0 h-4.5 w-4.5 rounded-full bg-white/15 border border-white/20 flex items-center justify-center mt-0.5">
-                        <Check className="h-2.5 w-2.5 text-white" />
+                  <div key={idx} className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300" style={{ animationDelay: `${idx * 50}ms` }}>
+                    <div className="flex items-start gap-2.5">
+                      <div className="flex-shrink-0 h-5 w-5 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mt-0.5">
+                        <Check className="h-3 w-3 text-white" />
                       </div>
-                      <h3 className="text-xs font-bold text-white leading-tight">
+                      <h3 className="text-base font-bold text-white tracking-wide leading-snug font-sans antialiased">
                         {item.q}
                       </h3>
                     </div>
-                    <p className="text-[11px] text-white/70 pl-6 leading-relaxed">
+                    <p className="text-sm text-white/85 pl-7 leading-relaxed font-normal antialiased">
                       {item.a}
                     </p>
                   </div>
@@ -203,7 +222,7 @@ const RegisterStudent = () => {
                   Already have an account?{" "}
                   <Link
                     to={redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : "/login"}
-                    className="text-primary hover:underline font-bold animate-pulse"
+                    className="text-primary hover:underline font-bold"
                   >
                     Log in
                   </Link>
@@ -212,7 +231,7 @@ const RegisterStudent = () => {
             </div>
 
             {/* Bottom Footer */}
-            <div className="relative z-10 text-[11px] text-white/60 font-medium pt-4">
+            <div className="relative z-10 text-[11px] text-white/60 font-medium pt-4 mt-8 border-t border-white/5">
               © 2026 Cuvasol - Live classes powered by Cuvasol Live
             </div>
           </div>
