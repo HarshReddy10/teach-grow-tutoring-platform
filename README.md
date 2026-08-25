@@ -1,115 +1,46 @@
-# Welcome to your Lovable project
+# Teach & Grow Tutoring Platform
 
-## Project info
+Role-based tutoring platform dashboard for admins, tutors, and students using React, Supabase, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Overview
 
-## How can I edit this code?
+Teach & Grow is a comprehensive tutoring management dashboard designed to provide tailored experiences based on user roles. The platform securely separates routing and data access for administrators, tutors, and students. By leveraging Supabase for authentication and database management alongside a modern React/Vite frontend, it delivers a fast, secure, and intuitive user experience.
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+TypeScript · React · Vite · Supabase · Tailwind CSS · shadcn/ui
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Key Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Role-Based Access Control:** Distinct dashboard views and capabilities based on user roles (Admin, Tutor, Student).
+- **Secure Authentication:** Integrated with Supabase for robust user management and service role validation.
+- **Modern Dashboard UI:** Built with shadcn/ui and Tailwind CSS for a clean, accessible, and responsive interface.
+- **Fast Development Workflow:** Optimized with Vite for instant server start and lightning-fast HMR.
 
-**Use your preferred IDE**
+## Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
+- Node.js 18+
+- Supabase Project & Credentials
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+```bash
+# Clone the repository
+git clone <url>
+cd teach-grow-tutoring-platform
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Demo Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+To quickly seed demo users for each role, configure your `.env` with `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, then run:
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-
-## Demo credentials (Admin / Student / Tutor)
-
-This project routes dashboards based on the `user_roles` table:
-
-- Admin: `/dashboard/admin`
-- Tutor: `/dashboard/tutor`
-- Student: `/dashboard/student`
-
-### Create the demo users
-
-You need a Supabase **service role key** (do not commit it).
-
-In PowerShell:
-
-```powershell
-$env:SUPABASE_URL="YOUR_SUPABASE_URL"
-$env:SUPABASE_SERVICE_ROLE_KEY="YOUR_SUPABASE_SERVICE_ROLE_KEY"
+```bash
 npm run demo:users
 ```
-
-Optional (override the default password):
-
-```powershell
-$env:DEMO_PASSWORD="TempPass123!"
-npm run demo:users
-```
-
-Note: the script also accepts `VITE_SUPABASE_URL` (from your existing `.env`) if you don’t want to set `SUPABASE_URL` separately.
-It will also automatically read `.env` from the project root (it won’t print your keys).
-
-### Demo logins
-
-- **Admin**
-  - Email: `admin.demo@teachgrow.local`
-  - Password: `TempPass123!` (or your `DEMO_PASSWORD`)
-- **Student**
-  - Email: `student.demo@teachgrow.local`
-  - Password: `TempPass123!` (or your `DEMO_PASSWORD`)
-- **Tutor**
-  - Email: `tutor.demo@teachgrow.local`
-  - Password: `TempPass123!` (or your `DEMO_PASSWORD`)
